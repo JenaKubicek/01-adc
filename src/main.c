@@ -36,11 +36,6 @@ int main(void)
 
     while (1) {
 
-        if (milis() - time > 333 && BTN_PUSH) {
-            LED_TOGG; 
-            time = milis();
-        }
-
         /*LED_FLIP; */
         /*_delay_ms(333);*/
         /*printf("Funguje to!!!\n");*/
