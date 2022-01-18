@@ -30,7 +30,7 @@ void setup(void)
     
     // na pinech/vstupech ADC_IN2 (PB2) a ADC_IN3 (PB3) vypneme vstupní buffer
     ADC2_SchmittTriggerConfig(ADC2_SCHMITTTRIG_CHANNEL4, DISABLE);
-    ADC2_SchmittTriggerConfig(ADC2_SCHMITTTRIG_CHANNEL5, DISABLE);
+    ADC2_SchmittTriggerConfig(ADC2_SCHMITTTRIG_CHANNEL3, DISABLE);
 
     // při inicializaci volíme frekvenci AD převodníku mezi 1-4MHz při 3.3V
     // mezi 1-6MHz při 5V napájení
@@ -42,6 +42,7 @@ void setup(void)
     
     // nasatvíme multiplexer na některý ze vstupních kanálů
     ADC2_Select_Channel(ADC2_CHANNEL_4);
+    ADC2_Select_Channel(ADC2_CHANNEL_3);
     // rozběhneme AD převodník
     ADC2_Cmd(ENABLE);
     // počkáme než se AD převodník rozběhne (~7us)
@@ -53,10 +54,11 @@ void setup(void)
 int main(void)
 {
     uint32_t time = 0;
-
+    uint32_t voltage,Temperature;
     setup();
     /*init_uart();*/
     uint16_t ADCx = 0;
+    uint16_t ADCr = 0;
 
     while (1) {
 
@@ -64,12 +66,11 @@ int main(void)
             LED_TOGG; 
             time = milis();
             ADCx = ADC_get(ADC2_CHANNEL_4);
-            printf("value = %d \n", ADCx);
+            ADCr = ADC_get(ADC2_CHANNEL_3);
+            voltage=(uint32_t)2495*ADCx/ADCr;
+            Temperature=(voltage-400)/19.5;
+            printf("value = %d : reference = %d : Voltage = %ld : Temperature = %ld\n", ADCx,ADCr, voltage, Temperature);
         }
-
-        /*LED_FLIP; */
-        /*_delay_ms(333);*/
-        /*printf("Funguje to!!!\n");*/
     }
 }
 
